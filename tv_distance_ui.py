@@ -108,7 +108,7 @@ with col1:
                 icon = "✅" if model_2["features"][feat] else "🔴"
                 st.markdown(f"{icon} {feat}")
     else:
-        st.info("📺 Modelele comparabile sunt afișate pentru diagonale peste 55".")
+        st.info("📺 Modelele comparabile sunt afișate pentru diagonale peste 55\".")
 
 with col2:
     st.image("TV.png", caption="Kuziini × Samsung", use_container_width=True)
