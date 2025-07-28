@@ -16,8 +16,9 @@ def dimensiuni_televizor(diagonala_inch):
     inaltime = diagonala_cm * RAPORT_16_9[1]
     return round(latime / 100, 2), round(inaltime / 100, 2)
 
-LANG = st.sidebar.selectbox("🌐 Language / Limba", ["Română", "English"])
-IS_RO = LANG == "Română"
+# 🇷🇴 Română, 🇬🇧 English
+LANG = st.sidebar.selectbox("🌐", ["🇷🇴 Română", "🇬🇧 English"])
+IS_RO = LANG == "🇷🇴 Română"
 
 TXT = {
     "title": "📐 Configurator diagonala TV în funcție de distanță" if IS_RO else "📐 TV Diagonal Configurator by Viewing Distance",
@@ -29,6 +30,7 @@ TXT = {
     "size": "lățime" if IS_RO else "width",
     "height": "înălțime" if IS_RO else "height",
     "tv_models": "📺 Modele TV recomandate" if IS_RO else "📺 Recommended TV Models",
+    "see_on_samsung": "🔗 Vezi pe Samsung" if IS_RO else "🔗 View on Samsung"
 }
 
 st.set_page_config(page_title="Kuziini TV Configurator", layout="wide")
@@ -45,7 +47,7 @@ with col1:
     diagonala_inch = calculeaza_diagonala(distanta)
     latime_m, inaltime_m = dimensiuni_televizor(diagonala_inch)
 
-    html_box = f"""
+    st.markdown(f"""
     <div style='background-color:#F0F9FF;padding:1.5rem;border-radius:12px;
                 border:2px solid #0B5394;text-align:center;'>
         <h1 style='color:#FF5722;font-size:3rem;'>{diagonala_inch}"</h1>
@@ -53,8 +55,7 @@ with col1:
         <p>{TXT['for_distance']} {distanta} m</p>
         <p style='font-weight:bold;'>🖼️ {TXT['size']} {latime_m} m × {TXT['height']} {inaltime_m} m</p>
     </div>
-    """
-    st.markdown(html_box, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     if st.button(TXT["export_button"]):
         ws["B1"] = distanta
@@ -66,26 +67,45 @@ with col1:
 
     st.markdown(f"<h4 style='margin-top:2rem;'>{TXT['tv_models']}</h4>", unsafe_allow_html=True)
 
-    if diagonala_inch <= 55:
-        models = [
-            ("Samsung AU7092", ["4K Crystal UHD", "Smart Hub", "HDR10+"]),
-            ("Samsung Q60B", ["QLED", "AirSlim", "Dual LED"]),
-        ]
-    elif 55 < diagonala_inch <= 75:
-        models = [
-            ("Samsung QN85C", ["Neo QLED 4K", "Mini LED", "Quantum HDR"]),
-            ("Samsung QN90B", ["144Hz Gaming", "Dolby Atmos", "Ultra Viewing Angle"]),
-        ]
-    else:
-        models = [
-            ("Samsung QN95C", ["Neo QLED 4K", "Precision Contrast", "Slim One Connect"]),
-            ("Samsung S95C OLED", ["OLED 4K", "Quantum HDR OLED+", "Dolby Atmos"]),
-        ]
+    if diagonala_inch > 55:
+        model_1 = {
+            "name": "Samsung QN85C",
+            "link": "https://www.samsung.com/ro/tvs/neo-qled-4k/qe55qn85catxxh/",
+            "features": {
+                "Neo QLED": True,
+                "Mini LED": True,
+                "Quantum HDR": True,
+                "Dolby Atmos": False
+            }
+        }
+        model_2 = {
+            "name": "Samsung QN90B",
+            "link": "https://www.samsung.com/ro/tvs/qled-tv/qn90b-neo-qled-4k-smart-tv/",
+            "features": {
+                "Neo QLED": True,
+                "Mini LED": True,
+                "Quantum HDR": True,
+                "Dolby Atmos": True
+            }
+        }
 
-    for name, features in models:
-        st.markdown(f"<b>{name}</b>", unsafe_allow_html=True)
-        for f in features:
-            st.markdown(f"• {f}")
+        f1, f2 = st.columns(2)
+
+        with f1:
+            st.markdown(f"### {model_1['name']}")
+            st.markdown(f"[{TXT['see_on_samsung']}]({model_1['link']})")
+            for feat, val in model_1["features"].items():
+                icon = "✅" if val else "🔴"
+                st.markdown(f"{icon} {feat}")
+
+        with f2:
+            st.markdown(f"### {model_2['name']}")
+            st.markdown(f"[{TXT['see_on_samsung']}]({model_2['link']})")
+            for feat, val in model_2["features"].items():
+                icon = "✅" if val else "🔴"
+                st.markdown(f"{icon} {feat}")
+    else:
+        st.info("📺 Modelele comparabile sunt afișate pentru diagonale peste 55".")
 
 with col2:
     st.image("TV.png", caption="Kuziini × Samsung", use_container_width=True)
