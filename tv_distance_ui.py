@@ -46,23 +46,14 @@ with col1:
     latime_m, inaltime_m = dimensiuni_televizor(diagonala_inch)
 
     html_box = f"""
-<div style="background-color:#F0F9FF;padding:1.5rem;border-radius:12px;
-            border:2px solid #0B5394;text-align:center;">
-    <h1 style="color:#FF5722;font-size:3rem;">{diagonala_inch}"</h1>
-    <h3 style="color:#0B5394;">{recommend}</h3>
-    <p>{for_distance} {distanta} m</p>
-    <p style="font-weight:bold;">🖼️ {size} {latime_m} m × {height} {inaltime_m} m</p>
-</div>
-""".format(
-        diagonala_inch=diagonala_inch,
-        recommend=TXT["recommend"],
-        for_distance=TXT["for_distance"],
-        distanta=distanta,
-        size=TXT["size"],
-        latime_m=latime_m,
-        height=TXT["height"],
-        inaltime_m=inaltime_m
-    )
+    <div style='background-color:#F0F9FF;padding:1.5rem;border-radius:12px;
+                border:2px solid #0B5394;text-align:center;'>
+        <h1 style='color:#FF5722;font-size:3rem;'>{diagonala_inch}"</h1>
+        <h3 style='color:#0B5394;'>{TXT['recommend']}</h3>
+        <p>{TXT['for_distance']} {distanta} m</p>
+        <p style='font-weight:bold;'>🖼️ {TXT['size']} {latime_m} m × {TXT['height']} {inaltime_m} m</p>
+    </div>
+    """
     st.markdown(html_box, unsafe_allow_html=True)
 
     if st.button(TXT["export_button"]):
