@@ -67,7 +67,7 @@ with col1:
         st.download_button(TXT["download_label"], output.getvalue(), "recomandare_tv_actualizat.xlsx")
 
 with col2:
-    st.image("TV.png", caption="Kuziini × Samsung", use_container_width=True)
+    st.image("TV.png", caption="Kuziini participa activ la inovatie ", use_container_width=True)
     st.markdown("<p style='text-align:center;font-weight:bold;color:black;'>Living Kuziini × Samsung</p>", unsafe_allow_html=True)
 
 # Modele TV
