@@ -1,4 +1,3 @@
-
 import streamlit as st
 from openpyxl import load_workbook
 import io
@@ -49,14 +48,14 @@ with col1:
     show_terrace = st.checkbox(TXT["terrace_tv"])
 
     html_box = f"""
-<div style="background-color:#F0F9FF;padding:1.5rem;border-radius:12px;
-            border:2px solid #0B5394;text-align:center;">
-    <h1 style="color:#FF5722;font-size:3rem;">{diagonala_inch}"</h1>
-    <h3 style="color:#0B5394;">{TXT['recommend']}</h3>
-    <p>{TXT['for_distance']} {distanta} m</p>
-    <p style="font-weight:bold;">🖼️ {TXT['size']} {latime_m} m × {TXT['height']} {inaltime_m} m</p>
-</div>
-"""
+    <div style="background-color:#F0F9FF;padding:1.5rem;border-radius:12px;
+                border:2px solid #0B5394;text-align:center;">
+        <h1 style="color:#FF5722;font-size:3rem;">{diagonala_inch}"</h1>
+        <h3 style="color:#0B5394;">{TXT['recommend']}</h3>
+        <p>{TXT['for_distance']} {distanta} m</p>
+        <p style="font-weight:bold;">🖼️ {TXT['size']} {latime_m} m × {TXT['height']} {inaltime_m} m</p>
+    </div>
+    """
     st.markdown(html_box, unsafe_allow_html=True)
 
     if st.button(TXT["export_button"]):
@@ -95,9 +94,28 @@ else:
             ("Samsung S95C OLED", ["OLED 4K", "Quantum HDR OLED+", "Dolby Atmos"], "https://www.samsung.com/ro/tvs/all-tvs/?oled-tv+in-stock"),
         ]
 
+    # Lista completă de caracteristici
+    all_features = set()
+    for _, features, _ in models:
+        all_features.update(features)
+    all_features = sorted(all_features)
+
+    feature_sets = [set(f) for _, f, _ in models]
+    unique_features = [s - feature_sets[1-i] for i, s in enumerate(feature_sets)]
+
     col1, col2 = st.columns(2)
-    for col, (name, features, link) in zip([col1, col2], models):
+    for idx, (col, (name, features, link)) in enumerate(zip([col1, col2], models)):
         with col:
-            st.markdown(f"#### [{name}]({link})", unsafe_allow_html=True)
-            for f in features:
-                st.markdown(f"✅ {f}")
+            st.markdown(f"### 🔗 [{name}]({link})", unsafe_allow_html=True)
+            matched = 0
+            for f in all_features:
+                if f in features:
+                    icon = "✅"
+                    if f in unique_features[idx]:
+                        st.markdown(f"<span style='background-color:#fff8b3;padding:4px;border-radius:6px'>{icon} {f}</span>", unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"{icon} {f}")
+                    matched += 1
+                else:
+                    st.markdown(f"🔴 {f}")
+            st.markdown(f"**📊 Scor: {matched}/{len(all_features)} caracteristici**")
